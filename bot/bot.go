@@ -18,10 +18,6 @@ type Options struct {
 
 // Constructor for Bot
 func NewBot(opts Options) (*Bot, error) {
-	mastersMap := map[string]bool{}
-	for _, master := range opts.Masters {
-		mastersMap[master] = true
-	}
 	status, err := LoadStatus()
 	if err != nil {
 		return nil, err
