@@ -118,6 +118,20 @@ func (c BaseClient) SendPhoto(request SendPhotoRequest) (interface{}, error) {
 	return resp.(*Message), err
 }
 
+func (c BaseClient) SendAudio(request SendAudioRequest) (interface{}, error) {
+	file, err := os.Open(request.Audio)
+	if err != nil {
+		return nil, err
+	}
+	defer closeOrWarn(file)
+	m := request.FillFormData(&map[string]io.Reader{}, file)
+	resp, err := c.doFormRequest("sendAudio", m, &Message{})
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*Message), err
+}
+
 func (c BaseClient) AnswerCallbackQuery(request AnswerCallbackQueryRequest) error {
 	var b bool
 	_, err := c.makeRequest("answerCallbackQuery", request, &b)
