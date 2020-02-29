@@ -10,7 +10,6 @@ type AuthZFunction func(update *telegram.Update) (allowed bool, chatID int, mess
 
 type Options struct {
 	APIToken           string
-	Masters            []string
 	LongPollingTimeout int
 	FailRetryInterval  int
 	Authorized         AuthZFunction
