@@ -26,11 +26,17 @@ func NewBot(opts Options) (*Bot, error) {
 	if err != nil {
 		return nil, err
 	}
+	authZFunc := opts.Authorized
+	if authZFunc == nil {
+		authZFunc = func(*telegram.Update) (bool, int, string) {
+			return true, 0, ""
+		}
+	}
 	bot := Bot{
 		failRetryInterval: opts.FailRetryInterval,
 		Telegram:          telegram.NewClient(opts.APIToken, opts.LongPollingTimeout),
 		status:            *status,
-		authorized:        opts.Authorized,
+		authorized:        authZFunc,
 	}
 	return &bot, nil
 }
