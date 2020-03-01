@@ -106,60 +106,90 @@ func (bot *Bot) OnUpdate(handler UpdateHandler) {
 
 func (bot *Bot) OnMessage(handler MessageHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.Message == nil {
+			return false, nil
+		}
 		return handler(bot, update.Message)
 	})
 }
 
 func (bot *Bot) OnEditedMessage(handler MessageHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.EditedMessage == nil {
+			return false, nil
+		}
 		return handler(bot, update.Message)
 	})
 }
 
 func (bot *Bot) OnChannelPost(handler MessageHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.ChannelPost == nil {
+			return false, nil
+		}
 		return handler(bot, update.Message)
 	})
 }
 
 func (bot *Bot) EditedChannelPostMessage(handler MessageHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.EditedChannelPost == nil {
+			return false, nil
+		}
 		return handler(bot, update.Message)
 	})
 }
 
 func (bot *Bot) OnInlineQuery(handler InlineQueryHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.InlineQuery == nil {
+			return false, nil
+		}
 		return handler(bot, update.InlineQuery)
 	})
 }
 
 func (bot *Bot) OnChosenInlineResult(handler ChosenInlineResultHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.ChosenInlineResult == nil {
+			return false, nil
+		}
 		return handler(bot, update.ChosenInlineResult)
 	})
 }
 
 func (bot *Bot) OnCallbackQuery(handler CallbackQueryHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.CallbackQuery == nil {
+			return false, nil
+		}
 		return handler(bot, update.CallbackQuery)
 	})
 }
 
 func (bot *Bot) OnShippingQuery(handler ShippingQueryHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.ShippingQuery == nil {
+			return false, nil
+		}
 		return handler(bot, update.ShippingQuery)
 	})
 }
 
 func (bot *Bot) OnPreCheckoutQuery(handler PreCheckoutQueryHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.PreCheckoutQuery == nil {
+			return false, nil
+		}
 		return handler(bot, update.PreCheckoutQuery)
 	})
 }
 
 func (bot *Bot) OnPoll(handler PollHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+		if update.Poll == nil {
+			return false, nil
+		}
 		return handler(bot, update.Poll)
 	})
 }
