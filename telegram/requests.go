@@ -25,6 +25,40 @@ type AudioSender interface {
 	SendAudio(SendAudioRequest) (*Message, error)
 }
 
+type DocumentSender interface {
+	SendDocument(SendDocumentRequest) (*Message, error)
+}
+
+type VideoSender interface {
+	SendVideo(SendVideoRequest) (*Message, error)
+}
+type AnimationSender interface {
+	SendAnimation(SendAnimationRequest) (*Message, error)
+}
+type VoiceSender interface {
+	SendVoice(SendVoiceRequest) (*Message, error)
+}
+
+type VideoNoteSender interface {
+	SendVideoNote(SendVideoNoteRequest) (*Message, error)
+}
+
+type MediaGroupSender interface {
+	SendMediaGroup(SendMediaGroupRequest) (*Message, error)
+}
+
+type LocationSender interface {
+	SendLocation(SendLocationRequest) (*Message, error)
+}
+
+type ContactSender interface {
+	SendContact(SendContactRequest) (*Message, error)
+}
+
+type PollSender interface {
+	SendPoll(SendPollRequest) (*Message, error)
+}
+
 type MessageReplyMarkupEditor interface {
 	EditMessageReplyMarkup(EditMessageReplyMarkupRequest) (*Message, error)
 }
@@ -65,15 +99,15 @@ type Client interface {
 	PhotoSender
 	AudioSender
 	FileGetter
-	SendDocument(SendDocumentRequest) (*Message, error)
-	SendVideo(SendVideoRequest) (*Message, error)
-	SendAnimation(SendAnimationRequest) (*Message, error)
-	SendVoice(SendVoiceRequest) (*Message, error)
-	SendVideoNote(SendVideoNoteRequest) (*Message, error)
-	SendMediaGroup(SendMediaGroupRequest) (*Message, error)
-	SendLocation(SendLocationRequest) (*Message, error)
-	SendContact(SendContactRequest) (*Message, error)
-	SendPoll(SendPollRequest) (*Message, error)
+	DocumentSender
+	VideoSender
+	AnimationSender
+	VoiceSender
+	VideoNoteSender
+	MediaGroupSender
+	LocationSender
+	ContactSender
+	PollSender
 	SendChatAction(SendChatActionRequest) bool
 	GetUserProfilePhotos(GetUserProfilePhotosRequest) UserProfilePhotos
 	ChatOperations
