@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/sirupsen/logrus"
 	"os"
+	"path/filepath"
 )
 
 type Status struct {
@@ -17,8 +18,9 @@ type jsonStatus struct {
 
 const statusFileName = "status.json"
 
-func LoadStatus() (*Status, error) {
-	file, err := os.Open(statusFileName)
+func LoadStatus(workingDir string) (*Status, error) {
+	filename := filepath.Join(workingDir, statusFileName)
+	file, err := os.Open(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
 			logrus.Info("no status file, will create new one")

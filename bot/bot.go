@@ -13,11 +13,12 @@ type Options struct {
 	LongPollingTimeout int
 	FailRetryInterval  int
 	Authorized         AuthZFunction
+	WorkingDir         string
 }
 
 // Constructor for Bot
 func NewBot(opts Options) (*Bot, error) {
-	status, err := LoadStatus()
+	status, err := LoadStatus(opts.WorkingDir)
 	if err != nil {
 		return nil, err
 	}
