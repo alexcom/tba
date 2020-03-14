@@ -20,6 +20,7 @@ const statusFileName = "status.json"
 
 func LoadStatus(workingDir string) (*Status, error) {
 	filename := filepath.Join(workingDir, statusFileName)
+	logrus.Infof("loading status from file: %s", filename)
 	file, err := os.Open(filename)
 	if err != nil {
 		if os.IsNotExist(err) {
