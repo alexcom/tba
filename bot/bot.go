@@ -65,7 +65,7 @@ func (bot Bot) Run() {
 		}
 		if bot.status.Changed() {
 			if err = bot.status.Save(); err != nil {
-				logrus.WithError(err).Error("fail saving status file")
+				logrus.WithError(err).Error("fail saving status file:", bot.status.filename)
 			}
 		}
 	}
