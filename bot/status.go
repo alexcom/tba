@@ -26,7 +26,9 @@ func LoadStatus(workingDir string) (*Status, error) {
 	if err != nil {
 		if os.IsNotExist(err) {
 			logrus.Info("no status file, will create new one:", filename)
-			return &Status{}, nil
+			return &Status{
+				filename: filename,
+			}, nil
 		}
 		return nil, err
 	}
