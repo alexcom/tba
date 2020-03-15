@@ -10,6 +10,7 @@ import (
 type Status struct {
 	lastUpdate int
 	changed    bool
+	filename   string
 }
 
 type jsonStatus struct {
@@ -38,6 +39,7 @@ func LoadStatus(workingDir string) (*Status, error) {
 	logrus.Info("status reading success")
 	return &Status{
 		lastUpdate: jStatus.LastUpdate,
+		filename:   filename,
 	}, nil
 }
 
@@ -65,7 +67,7 @@ func (s *Status) Save() error {
 	if !s.changed {
 		return nil
 	}
-	file, err := os.OpenFile(statusFileName, os.O_RDWR|os.O_CREATE, 0644)
+	file, err := os.OpenFile(s.filename, os.O_RDWR|os.O_CREATE, 0644)
 	if err != nil {
 		return err
 	}
