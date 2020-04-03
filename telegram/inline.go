@@ -1,5 +1,23 @@
 package telegram
 
+type InlineQueryResultType string
+
+const (
+	InlineQueryResultTypeArticle  InlineQueryResultType = "article"
+	InlineQueryResultTypePhoto    InlineQueryResultType = "photo"
+	InlineQueryResultTypeGif      InlineQueryResultType = "gif"
+	InlineQueryResultTypeMpeg4Gif InlineQueryResultType = "mpeg4_gif"
+	InlineQueryResultTypeVideo    InlineQueryResultType = "video"
+	InlineQueryResultTypeAudio    InlineQueryResultType = "audio"
+	InlineQueryResultTypeVoice    InlineQueryResultType = "voice"
+	InlineQueryResultTypeDocument InlineQueryResultType = "document"
+	InlineQueryResultTypeLocation InlineQueryResultType = "location"
+	InlineQueryResultTypeVenue    InlineQueryResultType = "venue"
+	InlineQueryResultTypeContact  InlineQueryResultType = "contact"
+	InlineQueryResultTypeGame     InlineQueryResultType = "game"
+	InlineQueryResultTypeSticker  InlineQueryResultType = "sticker"
+)
+
 type IDAndTypeSource struct {
 	Type string `json:"type"`
 	ID   string `json:"id"`
