@@ -136,7 +136,8 @@ func (c BaseClient) doPostRequest(
 			Result: result,
 		}
 	}
-	if !respWrapper.Ok {
+	// checking ErrorCode for zero to allow long polling pass through with Ok==false
+	if respWrapper.ErrorCode != 0 && !respWrapper.Ok {
 		return nil, fmt.Errorf("status code %d, error: %s", respWrapper.ErrorCode, respWrapper.Description)
 	}
 	err = json.NewDecoder(resp.Body).Decode(&respWrapper)
