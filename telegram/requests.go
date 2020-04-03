@@ -92,7 +92,7 @@ type MessageDeleter interface {
 }
 
 type InlineQueryAnswerer interface {
-	AnswerInlineQuery(AnswerInlineQueryRequest) bool
+	AnswerInlineQuery(AnswerInlineQueryRequest) (bool, error)
 }
 
 type Client interface {
@@ -211,7 +211,7 @@ func (c BaseClient) DeleteMessage(request DeleteMessageRequest) (bool, error) {
 	return *resp.(*bool), err
 }
 
-func (c BaseClient) AnswerInlineQuery(request InlineQueryAnswerer) (bool, error) {
+func (c BaseClient) AnswerInlineQuery(request AnswerInlineQueryRequest) (bool, error) {
 	var b bool
 	resp, err := c.makeRequest("answerInlineQuery", request, &b)
 	if err != nil {
