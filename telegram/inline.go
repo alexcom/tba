@@ -19,8 +19,8 @@ const (
 )
 
 type IDAndTypeSource struct {
-	Type string `json:"type"`
-	ID   string `json:"id"`
+	Type InlineQueryResultType `json:"type"`
+	ID   string                `json:"id"`
 }
 
 type TitleSource struct {
