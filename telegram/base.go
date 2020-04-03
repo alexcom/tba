@@ -3,7 +3,6 @@ package telegram
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -127,7 +126,7 @@ func (c BaseClient) doPostRequest(
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		return nil, errors.New(resp.Status)
+		logrus.Infof("got response code %d", resp.Status)
 	}
 	defer closeOrWarn(resp.Body)
 
@@ -136,6 +135,9 @@ func (c BaseClient) doPostRequest(
 		respWrapper = ResponseWrapper{
 			Result: result,
 		}
+	}
+	if !respWrapper.Ok {
+		return nil, fmt.Errorf("status code %d, error: %s", respWrapper.ErrorCode, respWrapper.Description)
 	}
 	err = json.NewDecoder(resp.Body).Decode(&respWrapper)
 	if err != nil {
