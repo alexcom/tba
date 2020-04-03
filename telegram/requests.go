@@ -91,6 +91,10 @@ type MessageDeleter interface {
 	DeleteMessage(DeleteMessageRequest) (bool, error)
 }
 
+type InlineQueryAnswerer interface {
+	AnswerInlineQuery(AnswerInlineQueryRequest) bool
+}
+
 type Client interface {
 	MeGetter
 	MessageSender
@@ -112,6 +116,7 @@ type Client interface {
 	GetUserProfilePhotos(GetUserProfilePhotosRequest) UserProfilePhotos
 	ChatOperations
 	AnswerCallbackQuery(AnswerCallbackQueryRequest) bool
+	InlineQueryAnswerer
 }
 
 func (c BaseClient) GetMe() (*User, error) {
@@ -200,6 +205,15 @@ func (c BaseClient) GetFile(request GetFileRequest) (*File, error) {
 func (c BaseClient) DeleteMessage(request DeleteMessageRequest) (bool, error) {
 	var b bool
 	resp, err := c.makeRequest("deleteMessage", request, &b)
+	if err != nil {
+		return false, err
+	}
+	return *resp.(*bool), err
+}
+
+func (c BaseClient) AnswerInlineQuery(request InlineQueryAnswerer) (bool, error) {
+	var b bool
+	resp, err := c.makeRequest("answerInlineQuery", request, &b)
 	if err != nil {
 		return false, err
 	}

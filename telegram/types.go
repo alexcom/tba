@@ -385,7 +385,7 @@ const (
 )
 
 type FormDataFiller interface {
-	FillFormData(m *map[string]io.Reader, reader io.Reader) *map[string]io.Reader
+	FillFormData(multipartReaders *map[string]io.Reader, contentReader io.Reader) *map[string]io.Reader
 }
 
 type ChatRequest struct {
@@ -784,6 +784,16 @@ type AnswerCallbackQueryRequest struct {
 	ShowAlert       bool   `json:"show_alert,omitempty"`
 	Url             string `json:"url,omitempty"`
 	CacheTime       int    `json:"cache_time,omitempty"`
+}
+
+type AnswerInlineQueryRequest struct {
+	InlineQueryId     string        `json:"inline_query_id"`
+	Results           []interface{} `json:"results"`
+	CacheTime         int           `json:"cache_time"`
+	IsPersonal        bool          `json:"is_personal"`
+	NextOffset        string        `json:"next_offset"`
+	SwitchPmText      string        `json:"switch_pm_text"`
+	SwitchPmParameter string        `json:"switch_pm_parameter"`
 }
 
 type ParseMode string
