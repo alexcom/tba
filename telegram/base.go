@@ -126,7 +126,7 @@ func (c BaseClient) doPostRequest(
 		return nil, err
 	}
 	if resp.StatusCode != 200 {
-		logrus.Infof("got response code %d", resp.Status)
+		logrus.Infof("got response code %d", resp.StatusCode)
 	}
 	defer closeOrWarn(resp.Body)
 
