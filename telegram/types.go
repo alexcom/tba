@@ -803,6 +803,16 @@ const (
 	ParseModeHTML     ParseMode = "HTML"
 )
 
+type EditMessageTextRequest struct {
+	ChatRequest
+	ParseModeSource
+	ReplyMarkupSource
+	MessageID             int    `json:"message_id"`
+	InlineMessageID       int    `json:"inline_message_id"`
+	Text                  string `json:"text"`
+	DisableWebPagePreview bool   `json:"disable_web_page_preview"`
+}
+
 type EditMessageReplyMarkupRequest struct {
 	ChatRequest
 	MessageID       int         `json:"message_id"`

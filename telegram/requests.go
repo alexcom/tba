@@ -59,6 +59,10 @@ type PollSender interface {
 	SendPoll(SendPollRequest) (*Message, error)
 }
 
+type MessageTextEditor interface {
+	EditMessageText(EditMessageTextRequest) (*Message, error)
+}
+
 type MessageReplyMarkupEditor interface {
 	EditMessageReplyMarkup(EditMessageReplyMarkupRequest) (*Message, error)
 }
@@ -175,6 +179,14 @@ func (c BaseClient) AnswerCallbackQuery(request AnswerCallbackQueryRequest) erro
 	var b bool
 	_, err := c.makeRequest("answerCallbackQuery", request, &b)
 	return err
+}
+
+func (c BaseClient) EditMessageText(request EditMessageTextRequest) (*Message, error) {
+	resp, err := c.makeRequest("editMessageText", request, &Message{})
+	if err != nil {
+		return nil, err
+	}
+	return resp.(*Message), err
 }
 
 func (c BaseClient) EditMessageReplyMarkup(request EditMessageReplyMarkupRequest) (*Message, error) {
