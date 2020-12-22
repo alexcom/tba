@@ -47,7 +47,7 @@ type MessageServices interface {
 	SendKeyboard(chatID int, msg string, kb *telegram.InlineKeyboardMarkup) (*telegram.Message, error)
 	DeleteMessage(chatID, messageID int) error
 	AnswerCallbackQuery(callbackQueryID, msg string, showAlert bool) error
-	EditKeyboardMarkup(chatID int, kb *telegram.InlineKeyboardMarkup) (*telegram.Message, error)
+	EditKeyboardMarkup(chatID, messageID int, kb *telegram.InlineKeyboardMarkup) (*telegram.Message, error)
 	GetFile(fileID string) (*telegram.File, error)
 	DownloadFile(filePath string) ([]byte, error)
 }
@@ -83,7 +83,7 @@ func (bot Bot) SendKeyboard(chatID int, msg string, kb *telegram.InlineKeyboardM
 	return bot.Telegram.SendMessage(request)
 }
 
-func (bot Bot) DeleteMessage(chatID int, messageID int) error {
+func (bot Bot) DeleteMessage(chatID, messageID int) error {
 	req := telegram.DeleteMessageRequest{}
 	req.ChatID = chatID
 	req.MessageID = messageID
@@ -99,9 +99,10 @@ func (bot Bot) AnswerCallbackQuery(callbackQueryID, message string, showAlert bo
 	return bot.Telegram.AnswerCallbackQuery(request)
 }
 
-func (bot Bot) EditKeyboardMarkup(chatID int, kb *telegram.InlineKeyboardMarkup) (*telegram.Message, error) {
+func (bot Bot) EditKeyboardMarkup(chatID, messageID int, kb *telegram.InlineKeyboardMarkup) (*telegram.Message, error) {
 	request := telegram.EditMessageReplyMarkupRequest{}
 	request.ChatID = chatID
+	request.MessageID = messageID
 	request.ReplyMarkup = kb
 	return bot.Telegram.EditMessageReplyMarkup(request)
 }
