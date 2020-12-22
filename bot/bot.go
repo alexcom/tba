@@ -59,7 +59,10 @@ func (bot Bot) Run() {
 			if allowed, chatID, message := bot.authorized(&update); allowed {
 				bot.processUpdate(&update)
 			} else {
-				bot.Report(chatID, WARN, message)
+				_, err = bot.SendMarkdown(chatID, "*"+message+"*")
+				if err != nil {
+					logrus.WithError(err).Error("sending service message failed")
+				}
 			}
 			bot.status.SetUpdate(update.UpdateID)
 		}
@@ -89,24 +92,24 @@ func (bot *Bot) processUpdate(update *telegram.Update) {
 	}
 }
 
-type UpdateHandler func(bot *Bot, update *telegram.Update) (breakChain bool, err error)
-type MessageHandler func(bot *Bot, update *telegram.Message) (breakChain bool, err error)
-type EditedMessageHandler func(bot *Bot, update *telegram.Message) (breakChain bool, err error)
-type ChannelPostHandler func(bot *Bot, update *telegram.Message) (breakChain bool, err error)
-type EditedChannelPostHandler func(bot *Bot, update *telegram.Message) (breakChain bool, err error)
-type InlineQueryHandler func(bot *Bot, update *telegram.InlineQuery) (breakChain bool, err error)
-type ChosenInlineResultHandler func(bot *Bot, update *telegram.ChosenInlineResult) (breakChain bool, err error)
-type CallbackQueryHandler func(bot *Bot, update *telegram.CallbackQuery) (breakChain bool, err error)
-type ShippingQueryHandler func(bot *Bot, update *telegram.ShippingQuery) (breakChain bool, err error)
-type PreCheckoutQueryHandler func(bot *Bot, update *telegram.PreCheckoutQuery) (breakChain bool, err error)
-type PollHandler func(bot *Bot, update *telegram.Poll) (breakChain bool, err error)
+type UpdateHandler func(services MessageServices, update *telegram.Update) (breakChain bool, err error)
+type MessageHandler func(services MessageServices, update *telegram.Message) (breakChain bool, err error)
+type EditedMessageHandler func(services MessageServices, update *telegram.Message) (breakChain bool, err error)
+type ChannelPostHandler func(services MessageServices, update *telegram.Message) (breakChain bool, err error)
+type EditedChannelPostHandler func(services MessageServices, update *telegram.Message) (breakChain bool, err error)
+type InlineQueryHandler func(services MessageServices, update *telegram.InlineQuery) (breakChain bool, err error)
+type ChosenInlineResultHandler func(services MessageServices, update *telegram.ChosenInlineResult) (breakChain bool, err error)
+type CallbackQueryHandler func(services MessageServices, update *telegram.CallbackQuery) (breakChain bool, err error)
+type ShippingQueryHandler func(services MessageServices, update *telegram.ShippingQuery) (breakChain bool, err error)
+type PreCheckoutQueryHandler func(services MessageServices, update *telegram.PreCheckoutQuery) (breakChain bool, err error)
+type PollHandler func(services MessageServices, update *telegram.Poll) (breakChain bool, err error)
 
 func (bot *Bot) OnUpdate(handler UpdateHandler) {
 	bot.updateHandlers = append(bot.updateHandlers, handler)
 }
 
 func (bot *Bot) OnMessage(handler MessageHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.Message == nil {
 			return false, nil
 		}
@@ -115,7 +118,7 @@ func (bot *Bot) OnMessage(handler MessageHandler) {
 }
 
 func (bot *Bot) OnEditedMessage(handler MessageHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.EditedMessage == nil {
 			return false, nil
 		}
@@ -124,7 +127,7 @@ func (bot *Bot) OnEditedMessage(handler MessageHandler) {
 }
 
 func (bot *Bot) OnChannelPost(handler MessageHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.ChannelPost == nil {
 			return false, nil
 		}
@@ -133,7 +136,7 @@ func (bot *Bot) OnChannelPost(handler MessageHandler) {
 }
 
 func (bot *Bot) EditedChannelPostMessage(handler MessageHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.EditedChannelPost == nil {
 			return false, nil
 		}
@@ -142,7 +145,7 @@ func (bot *Bot) EditedChannelPostMessage(handler MessageHandler) {
 }
 
 func (bot *Bot) OnInlineQuery(handler InlineQueryHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.InlineQuery == nil {
 			return false, nil
 		}
@@ -151,7 +154,7 @@ func (bot *Bot) OnInlineQuery(handler InlineQueryHandler) {
 }
 
 func (bot *Bot) OnChosenInlineResult(handler ChosenInlineResultHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.ChosenInlineResult == nil {
 			return false, nil
 		}
@@ -160,7 +163,7 @@ func (bot *Bot) OnChosenInlineResult(handler ChosenInlineResultHandler) {
 }
 
 func (bot *Bot) OnCallbackQuery(handler CallbackQueryHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.CallbackQuery == nil {
 			return false, nil
 		}
@@ -169,7 +172,7 @@ func (bot *Bot) OnCallbackQuery(handler CallbackQueryHandler) {
 }
 
 func (bot *Bot) OnShippingQuery(handler ShippingQueryHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.ShippingQuery == nil {
 			return false, nil
 		}
@@ -178,7 +181,7 @@ func (bot *Bot) OnShippingQuery(handler ShippingQueryHandler) {
 }
 
 func (bot *Bot) OnPreCheckoutQuery(handler PreCheckoutQueryHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.PreCheckoutQuery == nil {
 			return false, nil
 		}
@@ -187,7 +190,7 @@ func (bot *Bot) OnPreCheckoutQuery(handler PreCheckoutQueryHandler) {
 }
 
 func (bot *Bot) OnPoll(handler PollHandler) {
-	bot.updateHandlers = append(bot.updateHandlers, func(bot *Bot, update *telegram.Update) (breakChain bool, err error) {
+	bot.updateHandlers = append(bot.updateHandlers, func(services MessageServices, update *telegram.Update) (breakChain bool, err error) {
 		if update.Poll == nil {
 			return false, nil
 		}
